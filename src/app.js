@@ -130,5 +130,26 @@ function handleClick(e) {
     lat: destinationEL.dataset.lat,
     long: destinationEL.dataset.long
   }
-  console.log(origin.lat, origin.long, destination.lat, destination.long)
+  getTripData(origin.lat, origin.long, destination.lat, destination.long)
+}
+
+function getTripData(orgLat, orgLon, destLat, destLon) {
+  fetch(`${transitApi.url}?api-key=${transitApi.key}&origin=geo/${orgLat},${orgLon}&destination=geo/${destLat},${destLon}`)
+  .then(response => response.json())
+  .then(data => {
+    let fastestPlan = data.plans[0];
+    data.plans.forEach(plan => {
+      if (fastestPlan.times.durations.total > plan.times.durations.total) {
+        fastestPlan = plan
+      }
+    });
+
+    const alternativePlans = data.plans.filter(plan => {
+      if (plan.number !== fastestPlan.number) {
+        return plan;
+      }
+    })
+    console.log(fastestPlan) // alternatives array
+    console.log(alternativePlans)
+  })  
 }
