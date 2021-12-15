@@ -1,5 +1,5 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
-import { createPlaceObj } from "./modules/makeObj.js";
+import { createPlaceObj, createSegmentObj } from "./modules/makeObj.js";
 import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL } from "./modules/remove-class.js"
 
 const originForm = document.querySelector('.origin-form');
@@ -157,6 +157,7 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
 function createRecommendArrObj(fastestPlan) {
   const newObjArr = [];
   fastestPlan.segments.forEach(seg => {
-    console.log(seg)
+    newObjArr.push(createSegmentObj(seg))
   });
+  console.log(newObjArr)
 }
