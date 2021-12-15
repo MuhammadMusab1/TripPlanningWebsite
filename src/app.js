@@ -2,7 +2,9 @@ import { transitApi, mapApi, bBox } from "./modules/api.js";
 import { createPlaceObj } from "./modules/makeObj.js";
 
 const originForm = document.querySelector('.origin-form');
+const destinationForm = document.querySelector('.destination-form');
 const originUL = document.querySelector('.origins');
+const destinationUL = document.querySelector('.destinations')
 
 originForm.addEventListener('submit', (e) => {
   e.preventDefault()
@@ -10,6 +12,17 @@ originForm.addEventListener('submit', (e) => {
   if (input !== '') {
     getOriginPlaces(input)
     originUL.innerHTML = ''
+  } else {
+    return;
+  }
+});
+
+destinationForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+  const input = e.target[0].value
+  if (input !== '') {
+    getDestinationPlaces(input)
+    destinationUL.innerHTML = ''
   } else {
     return;
   }
@@ -27,6 +40,22 @@ function getOriginPlaces(name) {
     }
     data.features.forEach(place => {
       renderOriginList(createPlaceObj(place))
+    })
+  })
+}
+
+function getDestinationPlaces(name) {
+  fetch(`${mapApi.url}/${name}.json?bbox=${bBox.minLon},${bBox.minLat},${bBox.maxLong},${bBox.maxLat}&limit=10&access_token=${mapApi.key}`)
+  .then(response => response.json())
+  .then(data => {
+    if (data.features.length === 0) {
+      const error = document.createElement('DIV');
+      error.innerHTML = 'Sorry this place does not exist'
+      destinationUL.appendChild(error)
+      return;
+    }
+    data.features.forEach(place => {
+      console.log(createPlaceObj(place))
     })
   })
 }
