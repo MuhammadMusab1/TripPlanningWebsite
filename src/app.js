@@ -1,4 +1,5 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
+import { createPlaceObj } from "./modules/createObj.js";
 
 const originForm = document.querySelector('.origin-form');
 const originUL = document.querySelector('.origins');
@@ -25,7 +26,7 @@ function getOriginPlaces(name) {
       return;
     }
     data.features.forEach(place => {
-      console.log(place)
+      console.log(createPlaceObj(place))
     })
   })
 }
