@@ -1,5 +1,5 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
-import { createPlaceObj } from "./modules/createObj.js";
+import { createPlaceObj } from "./modules/makeObj.js";
 
 const originForm = document.querySelector('.origin-form');
 const originUL = document.querySelector('.origins');
@@ -26,7 +26,17 @@ function getOriginPlaces(name) {
       return;
     }
     data.features.forEach(place => {
-      console.log(createPlaceObj(place))
+      renderOriginList(createPlaceObj(place))
     })
   })
+}
+
+function renderOriginList(placeObj) {
+  const {name, address, longitude, latitude} = placeObj
+  originUL.insertAdjacentHTML('beforeend', 
+  `<li data-long=${longitude} data-lat=${latitude} class=>
+    <div class="name">${name}</div>
+    <div>${address}</div>
+  </li>`
+  )
 }
