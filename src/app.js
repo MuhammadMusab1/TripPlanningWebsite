@@ -55,7 +55,7 @@ function getDestinationPlaces(name) {
       return;
     }
     data.features.forEach(place => {
-      console.log(createPlaceObj(place))
+      renderDestinationList(createPlaceObj(place))
     })
   })
 }
@@ -63,6 +63,16 @@ function getDestinationPlaces(name) {
 function renderOriginList(placeObj) {
   const {name, address, longitude, latitude} = placeObj
   originUL.insertAdjacentHTML('beforeend', 
+  `<li data-long=${longitude} data-lat=${latitude} class=>
+    <div class="name">${name}</div>
+    <div>${address}</div>
+  </li>`
+  )
+}
+
+function renderDestinationList(placeObj) {
+  const {name, address, longitude, latitude} = placeObj
+  destinationUL.insertAdjacentHTML('beforeend', 
   `<li data-long=${longitude} data-lat=${latitude} class=>
     <div class="name">${name}</div>
     <div>${address}</div>
