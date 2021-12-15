@@ -16,6 +16,17 @@ originForm.addEventListener('submit', (e) => {
   }
 });
 
+originUL.addEventListener('click', (e) => {
+  if (e.target.nodeName === 'LI') {
+    removeClassFromOrig()
+    e.target.classList.add('selected')
+  }
+  if (e.target.parentElement.nodeName === 'LI') {
+    removeClassFromOrig()
+    e.target.parentElement.classList.add('selected')
+  }
+})
+
 destinationForm.addEventListener('submit', (e) => {
   e.preventDefault()
   const input = e.target[0].value
