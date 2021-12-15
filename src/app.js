@@ -1,10 +1,9 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
 import { createPlaceObj } from "./modules/makeObj.js";
+import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL } from "./modules/remove-class.js"
 
 const originForm = document.querySelector('.origin-form');
 const destinationForm = document.querySelector('.destination-form');
-const originUL = document.querySelector('.origins');
-const destinationUL = document.querySelector('.destinations')
 
 originForm.addEventListener('submit', (e) => {
   e.preventDefault()
