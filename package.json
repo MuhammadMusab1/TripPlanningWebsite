@@ -1,0 +1,23 @@
+{
+  "name": "finalproject",
+  "version": "1.0.0",
+  "description": "final-assignment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MuhammadMusab1/finalProject.git"
+  },
+  "author": "Musab",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MuhammadMusab1/finalProject/issues"
+  },
+  "homepage": "https://github.com/MuhammadMusab1/finalProject#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "webpack-stream": "^7.0.0"
+  }
+}
