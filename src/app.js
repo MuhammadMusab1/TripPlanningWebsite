@@ -148,8 +148,15 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
       if (plan.number !== fastestPlan.number) {
         return plan;
       }
-    })
-    console.log(fastestPlan) // alternatives array
+    });
+    createRecommendArrObj(fastestPlan) // alternatives array
     console.log(alternativePlans)
   })  
+}
+
+function createRecommendArrObj(fastestPlan) {
+  const newObjArr = [];
+  fastestPlan.segments.forEach(seg => {
+    console.log(seg)
+  });
 }
