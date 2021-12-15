@@ -4,6 +4,8 @@ import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL } fro
 
 const originForm = document.querySelector('.origin-form');
 const destinationForm = document.querySelector('.destination-form');
+const planTripButton = document.querySelector('.plan-trip');
+const busContainer = document.querySelector('.bus-container')
 
 function getOriginPlaces(name) {
   fetch(`${mapApi.url}/${name}.json?bbox=${bBox.minLon},${bBox.minLat},${bBox.maxLong},${bBox.maxLat}&limit=10&access_token=${mapApi.key}`)
@@ -100,3 +102,33 @@ destinationUL.addEventListener('click', (e) => {
     e.target.parentElement.classList.add('selected')
   }
 });
+
+planTripButton.addEventListener('click', handleClick)
+
+function handleClick(e) {
+  const originEL = originUL.querySelector('.selected')
+  const destinationEL = destinationUL.querySelector('.selected')
+  if (originEL === null || destinationEL === null) {
+    const error = document.createElement('DIV')
+    error.innerHTML = 'please finish the specification of your trip'
+    busContainer.innerHTML = ''
+    busContainer.appendChild(error)
+    return;
+  }
+  if (originEL.dataset.long === destinationEL.dataset.long) {
+    const error = document.createElement('DIV')
+    error.innerHTML = 'you picked the same location. choose another one.'
+    busContainer.innerHTML = ''
+    busContainer.appendChild(error)
+    return;
+  }
+  const origin = {
+    lat: originEL.dataset.lat,
+    long: originEL.dataset.long
+  }
+  const destination = {
+    lat: destinationEL.dataset.lat,
+    long: destinationEL.dataset.long
+  }
+  console.log(origin.lat, origin.long, destination.lat, destination.long)
+}
