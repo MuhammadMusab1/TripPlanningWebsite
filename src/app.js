@@ -5,39 +5,6 @@ import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL } fro
 const originForm = document.querySelector('.origin-form');
 const destinationForm = document.querySelector('.destination-form');
 
-originForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-  const input = e.target[0].value
-  if (input !== '') {
-    getOriginPlaces(input)
-    originUL.innerHTML = ''
-  } else {
-    return;
-  }
-});
-
-originUL.addEventListener('click', (e) => {
-  if (e.target.nodeName === 'LI') {
-    removeClassFromOrig()
-    e.target.classList.add('selected')
-  }
-  if (e.target.parentElement.nodeName === 'LI') {
-    removeClassFromOrig()
-    e.target.parentElement.classList.add('selected')
-  }
-})
-
-destinationForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-  const input = e.target[0].value
-  if (input !== '') {
-    getDestinationPlaces(input)
-    destinationUL.innerHTML = ''
-  } else {
-    return;
-  }
-});
-
 function getOriginPlaces(name) {
   fetch(`${mapApi.url}/${name}.json?bbox=${bBox.minLon},${bBox.minLat},${bBox.maxLong},${bBox.maxLat}&limit=10&access_token=${mapApi.key}`)
   .then(response => response.json())
@@ -50,7 +17,7 @@ function getOriginPlaces(name) {
     }
     data.features.forEach(place => {
       renderOriginList(createPlaceObj(place))
-    })
+    });
   })
 }
 
@@ -66,7 +33,7 @@ function getDestinationPlaces(name) {
     }
     data.features.forEach(place => {
       renderDestinationList(createPlaceObj(place))
-    })
+    });
   })
 }
 
@@ -89,3 +56,47 @@ function renderDestinationList(placeObj) {
   </li>`
   )
 }
+
+originForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+  const input = e.target[0].value
+  if (input !== '') {
+    getOriginPlaces(input)
+    originUL.innerHTML = ''
+  } else {
+    return;
+  }
+});
+
+destinationForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+  const input = e.target[0].value
+  if (input !== '') {
+    getDestinationPlaces(input)
+    destinationUL.innerHTML = ''
+  } else {
+    return;
+  }
+});
+
+originUL.addEventListener('click', (e) => {
+  if (e.target.nodeName === 'LI') {
+    removeClassFromOrig()
+    e.target.classList.add('selected')
+  }
+  if (e.target.parentElement.nodeName === 'LI') {
+    removeClassFromOrig()
+    e.target.parentElement.classList.add('selected')
+  }
+});
+
+destinationUL.addEventListener('click', (e) => {
+  if (e.target.nodeName === 'LI') {
+    removeClassFromDest()
+    e.target.classList.add('selected')
+  }
+  if (e.target.parentElement.nodeName === 'LI') {
+    removeClassFromDest()
+    e.target.parentElement.classList.add('selected')
+  }
+});
