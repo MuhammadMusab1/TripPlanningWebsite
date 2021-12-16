@@ -134,6 +134,10 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
   fetch(`${transitApi.url}?api-key=${transitApi.key}&origin=geo/${orgLat},${orgLon}&destination=geo/${destLat},${destLon}`)
   .then(response => response.json())
   .then(data => {
+    if (data.plans.length === 0) {
+      createErrorDiv('Sorry no trips found at this time');
+      return;
+    }
     let fastestPlan = data.plans[0];
     data.plans.forEach(plan => {
       if (fastestPlan.times.durations.total > plan.times.durations.total) {
