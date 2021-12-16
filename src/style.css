@@ -61,18 +61,18 @@ input:focus {
   width: 100%;
 }
 
-.my-trip {
+.my-trip, .alt-trip {
   width: 75%;
   margin: auto;
 }
 
-.my-trip li {
+.my-trip li, .alt-trip li {
   margin: 10px 0px;
   font-size: 17px;
   display: flex;
 }
 
-.my-trip i {
+.my-trip i, .alt-trip i {
   margin-right: 15px;
   font-size: 25px;
   align-self: center;

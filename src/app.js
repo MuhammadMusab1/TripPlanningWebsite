@@ -7,6 +7,7 @@ const destinationForm = document.querySelector('.destination-form');
 const planTripButton = document.querySelector('.plan-trip');
 const busContainer = document.querySelector('.bus-container');
 const recommendTripUL = document.querySelector('.my-trip');
+const alternativeTripUL = document.querySelector('.alt-trip');
 
 function getOriginPlaces(name) {
   fetch(`${mapApi.url}/${name}.json?bbox=${bBox.minLon},${bBox.minLat},${bBox.maxLong},${bBox.maxLat}&limit=10&access_token=${mapApi.key}`)
@@ -123,6 +124,8 @@ function handleClick(e) {
     busContainer.appendChild(error)
     return;
   }
+  recommendTripUL.innerHTML = '';
+  alternativeTripUL.innerHTML = '';
   const origin = {
     lat: originEL.dataset.lat,
     long: originEL.dataset.long
@@ -165,7 +168,6 @@ function createRecommendArrObj(fastestPlan) {
 }
 
 function renderRecommendTrip(objArray) {
-  recommendTripUL.innerHTML = ''
   recommendTripUL.insertAdjacentHTML('beforeend', 
   `<h2>Recommended</h2>`
   )
@@ -203,6 +205,38 @@ function createAlternativeArrObj(objArray) {
     planObj.segments.forEach(seg => {
       newObjArr.push(createSegmentObj(seg))
     });
-    console.log(newObjArr) 
-  })
+    renderAlternativeTrips(newObjArr); 
+  });
+}
+
+function renderAlternativeTrips(objArray) {
+  alternativeTripUL.insertAdjacentHTML('beforeend', 
+  `<h2>Alternative</h2>`
+  )
+  objArray.forEach(section => {
+    if (section.type === 'walk') {
+      alternativeTripUL.insertAdjacentHTML('beforeend', 
+      `<li>
+        <i class="fas fa-walking" aria-hidden="true"></i>Walk for ${section.time} minutes
+        to ${section.stopName === 'destination' ? `your ${section.stopName}` : `stop #${section.stopNum}-${section.stopName}`}
+      </li>`
+      )
+    }
+    if (section.type === 'ride') {
+      alternativeTripUL.insertAdjacentHTML('beforeend', 
+      `<li>
+        <i class="fas fa-bus" aria-hidden="true"></i>Ride the ${section.route} for
+        ${section.time} minutes.
+      </li>`
+      )
+    }
+    if (section.type === 'transfer') {
+      alternativeTripUL.insertAdjacentHTML('beforeend', 
+      `<li>
+        <i class="fas fa-ticket-alt" aria-hidden="true"></i>Transfer from stop #${section.stop1Num} - ${section.stop1Name} to 
+        stop #${section.stop2Num} - ${section.stop2Name}.
+      </li>`
+      )
+    }
+  });
 }
