@@ -18,3 +18,10 @@ export function removeClassFromDest() {
     return;
   }
 }
+
+export function removeErrorDiv() {
+  const allErrors = document.querySelectorAll('.error');
+  allErrors.forEach(error => {
+    error.remove();
+  })
+}

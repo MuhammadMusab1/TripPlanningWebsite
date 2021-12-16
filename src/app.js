@@ -1,6 +1,6 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
 import { createPlaceObj, createSegmentObj } from "./modules/makeObj.js";
-import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL } from "./modules/remove-class.js"
+import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL, removeErrorDiv } from "./modules/remove-class.js"
 
 const originForm = document.querySelector('.origin-form');
 const destinationForm = document.querySelector('.destination-form');
@@ -58,17 +58,24 @@ function handleClickOnTripButton(e) {
   const originEL = originUL.querySelector('.selected');
   const destinationEL = destinationUL.querySelector('.selected');
   if (originEL === null || destinationEL === null) {
-    const error = document.createElement('DIV')
-    error.innerHTML = 'please finish the specification of your trip'
-    busContainer.appendChild(error)
+    const errorDiv = document.createElement('DIV')
+    errorDiv.classList.add('error')
+    errorDiv.innerHTML = 'please finish the specification of your trip'
+    recommendTripUL.innerHTML = '';
+    alternativeTripUL.innerHTML = '';
+    busContainer.appendChild(errorDiv)
     return;
   }
   if (originEL.dataset.long === destinationEL.dataset.long) {
-    const error = document.createElement('DIV');
-    error.innerHTML = 'you picked the same location. choose another one.'
-    busContainer.appendChild(error)
+    const errorDiv = document.createElement('DIV')
+    errorDiv.classList.add('error')
+    errorDiv.innerHTML = 'you choose the same location.'
+    recommendTripUL.innerHTML = '';
+    alternativeTripUL.innerHTML = '';
+    busContainer.appendChild(errorDiv)
     return;
   }
+  removeErrorDiv()
   recommendTripUL.innerHTML = '';
   alternativeTripUL.innerHTML = '';
   const origin = {
@@ -138,7 +145,6 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
   fetch(`${transitApi.url}?api-key=${transitApi.key}&origin=geo/${orgLat},${orgLon}&destination=geo/${destLat},${destLon}`)
   .then(response => response.json())
   .then(data => {
-    console.log(data)
     let fastestPlan = data.plans[0];
     data.plans.forEach(plan => {
       if (fastestPlan.times.durations.total > plan.times.durations.total) {
@@ -153,7 +159,7 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
     });
     createRecommendArrObj(fastestPlan)
     createAlternativeArrObj(alternativePlans)
-  })  
+  })
 }
 
 function createRecommendArrObj(fastestPlan) {
