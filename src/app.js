@@ -90,7 +90,11 @@ function getOriginPlaces(name) {
     data.features.forEach(place => {
       renderOriginList(createPlaceObj(place))
     });
-  });
+  }).catch(error => {
+    const notFound403 = document.createElement('DIV');
+    notFound403.innerHTML = 'Sorry this place does not exist'
+    originUL.appendChild(notFound403)
+  })
 }
 
 function getDestinationPlaces(name) {
@@ -106,6 +110,10 @@ function getDestinationPlaces(name) {
     data.features.forEach(place => {
       renderDestinationList(createPlaceObj(place));
     });
+  }).catch(error => {
+    const notFound403 = document.createElement('DIV');
+    notFound403.innerHTML = 'Sorry this place does not exist'
+    destinationUL.appendChild(notFound403)
   })
 }
 
