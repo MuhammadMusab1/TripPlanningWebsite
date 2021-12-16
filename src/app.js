@@ -159,6 +159,8 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
     });
     createRecommendArrObj(fastestPlan);
     createAlternativeArrObj(alternativePlans);
+  }).catch(error => {
+    createErrorDiv('Sorry no trips found');
   })
 }
 
