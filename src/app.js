@@ -9,6 +9,79 @@ const busContainer = document.querySelector('.bus-container');
 const recommendTripUL = document.querySelector('.my-trip');
 const alternativeTripUL = document.querySelector('.alt-trip');
 
+
+function handleOriginSubmit(e) {
+  e.preventDefault()
+  const input = e.target[0].value
+  if (input !== '') {
+    getOriginPlaces(input)
+    originUL.innerHTML = '';
+  } else {
+    return;
+  }
+}
+
+function handleDestinationSubmit(e) {
+  e.preventDefault()
+  const input = e.target[0].value
+  if (input !== '') {
+    getDestinationPlaces(input)
+    destinationUL.innerHTML = '';
+  } else {
+    return;
+  }
+}
+
+function handleClickOnOriginUL(e) {
+  if (e.target.nodeName === 'LI') {
+    removeClassFromOrig()
+    e.target.classList.add('selected')
+  }
+  if (e.target.parentElement.nodeName === 'LI') {
+    removeClassFromOrig()
+    e.target.parentElement.classList.add('selected')
+  }
+}
+
+function handleClickOnDestinationUL(e) {
+  if (e.target.nodeName === 'LI') {
+    removeClassFromDest()
+    e.target.classList.add('selected')
+  }
+  if (e.target.parentElement.nodeName === 'LI') {
+    removeClassFromDest()
+    e.target.parentElement.classList.add('selected')
+  }
+}
+
+function handleClickOnTripButton(e) {
+  const originEL = originUL.querySelector('.selected');
+  const destinationEL = destinationUL.querySelector('.selected');
+  if (originEL === null || destinationEL === null) {
+    const error = document.createElement('DIV')
+    error.innerHTML = 'please finish the specification of your trip'
+    busContainer.appendChild(error)
+    return;
+  }
+  if (originEL.dataset.long === destinationEL.dataset.long) {
+    const error = document.createElement('DIV');
+    error.innerHTML = 'you picked the same location. choose another one.'
+    busContainer.appendChild(error)
+    return;
+  }
+  recommendTripUL.innerHTML = '';
+  alternativeTripUL.innerHTML = '';
+  const origin = {
+    lat: originEL.dataset.lat,
+    long: originEL.dataset.long
+  }
+  const destination = {
+    lat: destinationEL.dataset.lat,
+    long: destinationEL.dataset.long
+  }
+  getTripData(origin.lat, origin.long, destination.lat, destination.long)
+}
+
 function getOriginPlaces(name) {
   fetch(`${mapApi.url}/${name}.json?bbox=${bBox.minLon},${bBox.minLat},${bBox.maxLong},${bBox.maxLat}&limit=10&access_token=${mapApi.key}`)
   .then(response => response.json())
@@ -22,7 +95,7 @@ function getOriginPlaces(name) {
     data.features.forEach(place => {
       renderOriginList(createPlaceObj(place))
     });
-  })
+  });
 }
 
 function getDestinationPlaces(name) {
@@ -61,87 +134,11 @@ function renderDestinationList(placeObj) {
   )
 }
 
-originForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-  const input = e.target[0].value
-  if (input !== '') {
-    getOriginPlaces(input)
-    originUL.innerHTML = ''
-  } else {
-    return;
-  }
-});
-
-destinationForm.addEventListener('submit', (e) => {
-  e.preventDefault()
-  const input = e.target[0].value
-  if (input !== '') {
-    getDestinationPlaces(input)
-    destinationUL.innerHTML = ''
-  } else {
-    return;
-  }
-});
-
-originUL.addEventListener('click', (e) => {
-  if (e.target.nodeName === 'LI') {
-    removeClassFromOrig()
-    e.target.classList.add('selected')
-  }
-  if (e.target.parentElement.nodeName === 'LI') {
-    removeClassFromOrig()
-    e.target.parentElement.classList.add('selected')
-  }
-});
-
-destinationUL.addEventListener('click', (e) => {
-  if (e.target.nodeName === 'LI') {
-    removeClassFromDest()
-    e.target.classList.add('selected')
-  }
-  if (e.target.parentElement.nodeName === 'LI') {
-    removeClassFromDest()
-    e.target.parentElement.classList.add('selected')
-  }
-});
-
-planTripButton.addEventListener('click', handleClick)
-
-function handleClick(e) {
-  const originEL = originUL.querySelector('.selected')
-  const destinationEL = destinationUL.querySelector('.selected')
-  if (originEL === null || destinationEL === null) {
-    const error = document.createElement('DIV')
-    error.innerHTML = 'please finish the specification of your trip'
-    busContainer.innerHTML = ''
-    busContainer.appendChild(error)
-    return;
-  }
-  if (originEL.dataset.long === destinationEL.dataset.long) {
-    const error = document.createElement('DIV')
-    error.innerHTML = 'you picked the same location. choose another one.'
-    busContainer.innerHTML = ''
-    busContainer.appendChild(error)
-    return;
-  }
-  recommendTripUL.innerHTML = '';
-  alternativeTripUL.innerHTML = '';
-  const origin = {
-    lat: originEL.dataset.lat,
-    long: originEL.dataset.long
-  }
-  const destination = {
-    lat: destinationEL.dataset.lat,
-    long: destinationEL.dataset.long
-  }
-  getTripData(origin.lat, origin.long, destination.lat, destination.long)
-  //console.log(origin.lat, origin.long, destination.lat, destination.long)
-}
-
 function getTripData(orgLat, orgLon, destLat, destLon) {
   fetch(`${transitApi.url}?api-key=${transitApi.key}&origin=geo/${orgLat},${orgLon}&destination=geo/${destLat},${destLon}`)
   .then(response => response.json())
   .then(data => {
+    console.log(data)
     let fastestPlan = data.plans[0];
     data.plans.forEach(plan => {
       if (fastestPlan.times.durations.total > plan.times.durations.total) {
@@ -164,7 +161,18 @@ function createRecommendArrObj(fastestPlan) {
   fastestPlan.segments.forEach(seg => {
     newObjArr.push(createSegmentObj(seg))
   });
+  console.log(newObjArr)
   renderRecommendTrip(newObjArr)
+}
+
+function createAlternativeArrObj(objArray) {
+  objArray.forEach(planObj => {
+    const newObjArr = [];
+    planObj.segments.forEach(seg => {
+      newObjArr.push(createSegmentObj(seg))
+    });
+    renderAlternativeTrips(newObjArr); 
+  });
 }
 
 function renderRecommendTrip(objArray) {
@@ -199,16 +207,6 @@ function renderRecommendTrip(objArray) {
   });
 }
 
-function createAlternativeArrObj(objArray) {
-  objArray.forEach(planObj => {
-    const newObjArr = [];
-    planObj.segments.forEach(seg => {
-      newObjArr.push(createSegmentObj(seg))
-    });
-    renderAlternativeTrips(newObjArr); 
-  });
-}
-
 function renderAlternativeTrips(objArray) {
   alternativeTripUL.insertAdjacentHTML('beforeend', 
   `<h2>Alternative</h2>`
@@ -240,3 +238,9 @@ function renderAlternativeTrips(objArray) {
     }
   });
 }
+
+originForm.addEventListener('submit', handleOriginSubmit);
+destinationForm.addEventListener('submit', handleDestinationSubmit);
+originUL.addEventListener('click', handleClickOnOriginUL);
+destinationUL.addEventListener('click', handleClickOnDestinationUL);
+planTripButton.addEventListener('click', handleClickOnTripButton)
