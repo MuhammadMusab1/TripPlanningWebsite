@@ -1,3 +1,7 @@
+export const busContainer = document.querySelector('.bus-container');
+export const recommendTripUL = document.querySelector('.my-trip');
+export const alternativeTripUL = document.querySelector('.alt-trip');
+
 export function createPlaceObj(place) {
   return {
     name: place.text,
@@ -33,4 +37,13 @@ export function createSegmentObj(seg) {
       stop2Name: seg.to.stop.name,
     }
   }
+}
+
+export function createErrorDiv(description) {
+  const errorDiv = document.createElement('DIV')
+    errorDiv.classList.add('error')
+    errorDiv.innerHTML = description
+    recommendTripUL.innerHTML = '';
+    alternativeTripUL.innerHTML = '';
+    busContainer.appendChild(errorDiv)
 }

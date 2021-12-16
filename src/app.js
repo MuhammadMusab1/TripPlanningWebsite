@@ -1,14 +1,10 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
-import { createPlaceObj, createSegmentObj } from "./modules/makeObj.js";
+import { createPlaceObj, createSegmentObj, createErrorDiv, recommendTripUL, alternativeTripUL } from "./modules/create.js";
 import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL, removeErrorDiv } from "./modules/remove-class.js"
 
 const originForm = document.querySelector('.origin-form');
 const destinationForm = document.querySelector('.destination-form');
 const planTripButton = document.querySelector('.plan-trip');
-const busContainer = document.querySelector('.bus-container');
-const recommendTripUL = document.querySelector('.my-trip');
-const alternativeTripUL = document.querySelector('.alt-trip');
-
 
 function handleOriginSubmit(e) {
   e.preventDefault()
@@ -17,7 +13,9 @@ function handleOriginSubmit(e) {
     getOriginPlaces(input)
     originUL.innerHTML = '';
   } else {
+    originUL.innerHTML = '';
     return;
+    
   }
 }
 
@@ -28,6 +26,7 @@ function handleDestinationSubmit(e) {
     getDestinationPlaces(input)
     destinationUL.innerHTML = '';
   } else {
+    destinationUL.innerHTML = '';
     return;
   }
 }
@@ -58,21 +57,11 @@ function handleClickOnTripButton(e) {
   const originEL = originUL.querySelector('.selected');
   const destinationEL = destinationUL.querySelector('.selected');
   if (originEL === null || destinationEL === null) {
-    const errorDiv = document.createElement('DIV')
-    errorDiv.classList.add('error')
-    errorDiv.innerHTML = 'please finish the specification of your trip'
-    recommendTripUL.innerHTML = '';
-    alternativeTripUL.innerHTML = '';
-    busContainer.appendChild(errorDiv)
+    createErrorDiv('please finish your trips specification')
     return;
   }
   if (originEL.dataset.long === destinationEL.dataset.long) {
-    const errorDiv = document.createElement('DIV')
-    errorDiv.classList.add('error')
-    errorDiv.innerHTML = 'you choose the same location.'
-    recommendTripUL.innerHTML = '';
-    alternativeTripUL.innerHTML = '';
-    busContainer.appendChild(errorDiv)
+    createErrorDiv('you choose the same location')
     return;
   }
   removeErrorDiv()
@@ -167,7 +156,6 @@ function createRecommendArrObj(fastestPlan) {
   fastestPlan.segments.forEach(seg => {
     newObjArr.push(createSegmentObj(seg))
   });
-  console.log(newObjArr)
   renderRecommendTrip(newObjArr)
 }
 
