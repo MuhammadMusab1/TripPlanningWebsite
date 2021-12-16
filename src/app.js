@@ -132,6 +132,7 @@ function handleClick(e) {
     long: destinationEL.dataset.long
   }
   getTripData(origin.lat, origin.long, destination.lat, destination.long)
+  //console.log(origin.lat, origin.long, destination.lat, destination.long)
 }
 
 function getTripData(orgLat, orgLon, destLat, destLon) {
@@ -190,5 +191,5 @@ function renderRecommendTrip(objArray) {
       </li>`
       )
     }
-  })
+  });
 }
