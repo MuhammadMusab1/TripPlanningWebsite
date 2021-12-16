@@ -166,6 +166,9 @@ function createRecommendArrObj(fastestPlan) {
 
 function renderRecommendTrip(objArray) {
   recommendTripUL.innerHTML = ''
+  recommendTripUL.insertAdjacentHTML('beforeend', 
+  `<h2>Recommended</h2>`
+  )
   objArray.forEach(section => {
     if (section.type === 'walk') {
       recommendTripUL.insertAdjacentHTML('beforeend', 
