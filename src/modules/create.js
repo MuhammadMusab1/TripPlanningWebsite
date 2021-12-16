@@ -45,5 +45,5 @@ export function createErrorDiv(description) {
     errorDiv.innerHTML = description
     recommendTripUL.innerHTML = '';
     alternativeTripUL.innerHTML = '';
-    busContainer.appendChild(errorDiv)
+    busContainer.appendChild(errorDiv);
 }

@@ -1,6 +1,6 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
 import { createPlaceObj, createSegmentObj, createErrorDiv, recommendTripUL, alternativeTripUL } from "./modules/create.js";
-import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL, removeErrorDiv } from "./modules/remove-class.js"
+import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL, removeErrorDiv } from "./modules/remove-class.js";
 
 const originForm = document.querySelector('.origin-form');
 const destinationForm = document.querySelector('.destination-form');
@@ -10,12 +10,11 @@ function handleOriginSubmit(e) {
   e.preventDefault()
   const input = e.target[0].value
   if (input !== '') {
-    getOriginPlaces(input)
+    getOriginPlaces(input);
     originUL.innerHTML = '';
   } else {
     originUL.innerHTML = '';
     return;
-    
   }
 }
 
@@ -23,7 +22,7 @@ function handleDestinationSubmit(e) {
   e.preventDefault()
   const input = e.target[0].value
   if (input !== '') {
-    getDestinationPlaces(input)
+    getDestinationPlaces(input);
     destinationUL.innerHTML = '';
   } else {
     destinationUL.innerHTML = '';
@@ -33,22 +32,22 @@ function handleDestinationSubmit(e) {
 
 function handleClickOnOriginUL(e) {
   if (e.target.nodeName === 'LI') {
-    removeClassFromOrig()
+    removeClassFromOrig();
     e.target.classList.add('selected')
   }
   if (e.target.parentElement.nodeName === 'LI') {
-    removeClassFromOrig()
+    removeClassFromOrig();
     e.target.parentElement.classList.add('selected')
   }
 }
 
 function handleClickOnDestinationUL(e) {
   if (e.target.nodeName === 'LI') {
-    removeClassFromDest()
+    removeClassFromDest();
     e.target.classList.add('selected')
   }
   if (e.target.parentElement.nodeName === 'LI') {
-    removeClassFromDest()
+    removeClassFromDest();
     e.target.parentElement.classList.add('selected')
   }
 }
@@ -61,7 +60,7 @@ function handleClickOnTripButton(e) {
     return;
   }
   if (originEL.dataset.long === destinationEL.dataset.long) {
-    createErrorDiv('you choose the same location')
+    createErrorDiv('you choose the same location');
     return;
   }
   removeErrorDiv()
@@ -75,7 +74,7 @@ function handleClickOnTripButton(e) {
     lat: destinationEL.dataset.lat,
     long: destinationEL.dataset.long
   }
-  getTripData(origin.lat, origin.long, destination.lat, destination.long)
+  getTripData(origin.lat, origin.long, destination.lat, destination.long);
 }
 
 function getOriginPlaces(name) {
@@ -100,18 +99,18 @@ function getDestinationPlaces(name) {
   .then(data => {
     if (data.features.length === 0) {
       const error = document.createElement('DIV');
-      error.innerHTML = 'Sorry this place does not exist'
-      destinationUL.appendChild(error)
+      error.innerHTML = 'Sorry this place does not exist';
+      destinationUL.appendChild(error);
       return;
     }
     data.features.forEach(place => {
-      renderDestinationList(createPlaceObj(place))
+      renderDestinationList(createPlaceObj(place));
     });
   })
 }
 
 function renderOriginList(placeObj) {
-  const {name, address, longitude, latitude} = placeObj
+  const {name, address, longitude, latitude} = placeObj;
   originUL.insertAdjacentHTML('beforeend', 
   `<li data-long=${longitude} data-lat=${latitude} class=>
     <div class="name">${name}</div>
@@ -121,7 +120,7 @@ function renderOriginList(placeObj) {
 }
 
 function renderDestinationList(placeObj) {
-  const {name, address, longitude, latitude} = placeObj
+  const {name, address, longitude, latitude} = placeObj;
   destinationUL.insertAdjacentHTML('beforeend', 
   `<li data-long=${longitude} data-lat=${latitude} class=>
     <div class="name">${name}</div>
@@ -150,8 +149,8 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
         return plan;
       }
     });
-    createRecommendArrObj(fastestPlan)
-    createAlternativeArrObj(alternativePlans)
+    createRecommendArrObj(fastestPlan);
+    createAlternativeArrObj(alternativePlans);
   })
 }
 
@@ -181,7 +180,7 @@ function renderRecommendTrip(objArray) {
     if (section.type === 'walk') {
       recommendTripUL.insertAdjacentHTML('beforeend', 
       `<li>
-        <i class="fas fa-walking" aria-hidden="true"></i>Walk for ${section.time} minutes
+        <i class="fas fa-walking" aria-hidden="true"></i>Walk for ${section.time} ${section.time === 1 ? 'minute' : 'minutes'}
         to ${section.stopName === 'destination' ? `your ${section.stopName}` : `stop #${section.stopNum}-${section.stopName}`}
       </li>`
       )
@@ -190,7 +189,7 @@ function renderRecommendTrip(objArray) {
       recommendTripUL.insertAdjacentHTML('beforeend', 
       `<li>
         <i class="fas fa-bus" aria-hidden="true"></i>Ride the ${section.route} for
-        ${section.time} minutes.
+        ${section.time} ${section.time === 1 ? 'minute' : 'minutes'}.
       </li>`
       )
     }
@@ -213,7 +212,7 @@ function renderAlternativeTrips(objArray) {
     if (section.type === 'walk') {
       alternativeTripUL.insertAdjacentHTML('beforeend', 
       `<li>
-        <i class="fas fa-walking" aria-hidden="true"></i>Walk for ${section.time} minutes
+        <i class="fas fa-walking" aria-hidden="true"></i>Walk for ${section.time} ${section.time === 1 ? 'minute' : 'minutes'}
         to ${section.stopName === 'destination' ? `your ${section.stopName}` : `stop #${section.stopNum}-${section.stopName}`}
       </li>`
       )
@@ -222,7 +221,7 @@ function renderAlternativeTrips(objArray) {
       alternativeTripUL.insertAdjacentHTML('beforeend', 
       `<li>
         <i class="fas fa-bus" aria-hidden="true"></i>Ride the ${section.route} for
-        ${section.time} minutes.
+        ${section.time} ${section.time === 1 ? 'minute' : 'minutes'}.
       </li>`
       )
     }
@@ -241,4 +240,4 @@ originForm.addEventListener('submit', handleOriginSubmit);
 destinationForm.addEventListener('submit', handleDestinationSubmit);
 originUL.addEventListener('click', handleClickOnOriginUL);
 destinationUL.addEventListener('click', handleClickOnDestinationUL);
-planTripButton.addEventListener('click', handleClickOnTripButton)
+planTripButton.addEventListener('click', handleClickOnTripButton);
