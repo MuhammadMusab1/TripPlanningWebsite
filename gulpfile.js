@@ -7,7 +7,7 @@ function pagesTask() {
 
 function scriptsTask() {
   return src('src/**/*.js')
-  .pipe(gulpWebpack({mode: 'production'}))
+  .pipe(gulpWebpack({mode: 'production', output: {filename: 'app.js'}}))
   .pipe(dest('dist'))
 }
 

@@ -1,6 +1,6 @@
 import { transitApi, mapApi, bBox } from "./modules/api.js";
 import { createPlaceObj, createSegmentObj, createErrorDiv, recommendTripUL, alternativeTripUL } from "./modules/create.js";
-import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL, removeErrorDiv } from "./modules/remove-class.js";
+import { removeClassFromDest, removeClassFromOrig, originUL, destinationUL, removeErrorDiv } from "./modules/remove.js";
 
 const originForm = document.querySelector('.origin-form');
 const destinationForm = document.querySelector('.destination-form');
