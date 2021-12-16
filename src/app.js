@@ -151,8 +151,8 @@ function getTripData(orgLat, orgLon, destLat, destLon) {
         return plan;
       }
     });
-    createRecommendArrObj(fastestPlan) // alternatives array
-    console.log(alternativePlans)
+    createRecommendArrObj(fastestPlan)
+    createAlternativeArrObj(alternativePlans)
   })  
 }
 
@@ -195,4 +195,14 @@ function renderRecommendTrip(objArray) {
       )
     }
   });
+}
+
+function createAlternativeArrObj(objArray) {
+  objArray.forEach(planObj => {
+    const newObjArr = [];
+    planObj.segments.forEach(seg => {
+      newObjArr.push(createSegmentObj(seg))
+    });
+    console.log(newObjArr) 
+  })
 }
