@@ -15,9 +15,13 @@ function stylesTask() {
   return src('src/*.css').pipe(dest('dist'))
 }
 
-function watchTask() {
-  return watch(['src/*'], parallel(pagesTask, scriptsTask, stylesTask))
+function imageTask() {
+  return src('src/*.png').pipe(dest('dist'))
 }
 
-exports.default = parallel(pagesTask, scriptsTask, stylesTask)
+function watchTask() {
+  return watch(['src/*'], parallel(pagesTask, scriptsTask, stylesTask, imageTask))
+}
+
+exports.default = parallel(pagesTask, scriptsTask, stylesTask, imageTask)
 exports.watch = watchTask
